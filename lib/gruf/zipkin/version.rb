@@ -29,6 +29,6 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 module Gruf
   module Zipkin
-    VERSION = '0.9.0'.freeze
+    VERSION = '0.9.1.pre'.freeze
   end
 end
