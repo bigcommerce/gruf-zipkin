@@ -30,9 +30,15 @@ module Gruf
   module Zipkin
     class Hook < Gruf::Hooks::Base
 
-      def around(_call_signature, _req, _call, &block)
-        ZipkinTracer::TraceClient.local_component_span(span_key) do |ztc|
-          ztc.record span_key
+      ##
+      # @param [Symbol] call_signature
+      # @param [Object] _req
+      # @param [GRPC::ActiveCall] _call
+      #
+      def around(call_signature, _req, _call, &block)
+        sk = span_key(call_signature)
+        ZipkinTracer::TraceClient.local_component_span(sk) do |ztc|
+          ztc.record(sk)
           yield if block_given?
         end
       end
@@ -48,7 +54,7 @@ module Gruf
       ##
       # @return [String]
       #
-      def span_key
+      def span_key(call_signature)
         "#{span_prefix}#{service_key}.#{call_signature}"
       end
 
