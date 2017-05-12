@@ -13,7 +13,7 @@ gem 'gruf-zipkin'
 Then in an initializer or before use:
 
 ```ruby
-require 'gruf-zipkin'
+require 'gruf/zipkin'
 
 Gruf::Hooks::Registry.add(:zipkin, Gruf::Zipkin::Hook)
 ```
@@ -29,7 +29,7 @@ You can further customize the tracing of gruf services via the configuration:
 Gruf.configure do |c|
   c.hook_options = {
     zipkin: {
-      span_prefix: 'myapp.',
+      span_prefix: 'myapp',
     }    
   }  
 end
