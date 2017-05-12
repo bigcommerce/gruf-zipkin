@@ -27,9 +27,9 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
-require 'gruf'
-require 'ffaker'
 require 'pry'
+require 'gruf'
+require 'gruf/zipkin'
 
 Dir["#{File.join(File.dirname(__FILE__), 'support')}/**/*.rb"].each {|f| require f }
 
@@ -43,4 +43,6 @@ RSpec.configure do |config|
     mocks.allow_message_expectations_on_nil = true
   end
   config.color = true
+
+  config.include Gruf::Zipkin::SpecHelpers
 end
