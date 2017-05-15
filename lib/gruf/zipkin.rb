@@ -28,6 +28,9 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 require 'zipkin-tracer'
 require_relative 'zipkin/version'
+require_relative 'zipkin/headers'
+require_relative 'zipkin/method'
+require_relative 'zipkin/trace'
 require_relative 'zipkin/hook'
 
 module Gruf

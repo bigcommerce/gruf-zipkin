@@ -31,31 +31,32 @@ module Gruf
     class Hook < Gruf::Hooks::Base
 
       ##
+      # Sets up the tracing hook
+      #
+      def setup
+        @config = ::ZipkinTracer::Config.new(nil, options).freeze
+        @tracer = ::ZipkinTracer::TracerFactory.new.tracer(@config)
+      end
+
+      ##
+      # Handle the gruf around hook and trace sampled requests
+      #
       # @param [Symbol] call_signature
-      # @param [Object] _req
-      # @param [GRPC::ActiveCall] _call
+      # @param [Object] request
+      # @param [GRPC::ActiveCall] active_call
       #
-      def around(call_signature, _req, _call, &block)
-        sk = span_key(call_signature)
-        ZipkinTracer::TraceClient.local_component_span(sk) do |ztc|
-          ztc.record(sk)
-          yield if block_given?
+      def around(call_signature, request, active_call, &block)
+        trace = build_trace(call_signature, request, active_call)
+
+        if trace.sampled?
+          result = nil
+          ::ZipkinTracer::TraceContainer.with_trace_id(trace.trace_id) do
+            result = trace.trace!(@tracer, &block)
+          end
+        else
+          result = yield
         end
-      end
-
-      ##
-      # @return [String]
-      #
-      def span_prefix
-        prefix = options.fetch(:span_prefix, '').to_s
-        prefix.empty? ? '' : "#{prefix}."
-      end
-
-      ##
-      # @return [String]
-      #
-      def span_key(call_signature)
-        "#{span_prefix}#{service_key}.#{call_signature}"
+        result
       end
 
       ##
@@ -70,6 +71,19 @@ module Gruf
       #
       def options
         @options.fetch(:zipkin, {})
+      end
+
+      private
+
+      ##
+      # @param [Symbol] call_signature
+      # @param [Object] request
+      # @param [GRPC::ActiveCall] active_call
+      # @return [Gruf::Zipkin::Trace]
+      #
+      def build_trace(call_signature, request, active_call)
+        method = Gruf::Zipkin::Method.new(active_call, call_signature, request)
+        Gruf::Zipkin::Trace.new(method, service_key, options)
       end
     end
   end

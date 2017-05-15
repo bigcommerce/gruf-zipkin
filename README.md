@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.com/bigcommerce/gruf-zipkin.svg?token=D3Cc4LCF9BgpUx4dpPpv&branch=master)](https://travis-ci.com/bigcommerce/gruf-zipkin)
 
-Adds Zipkin tracing support for [gruf](https://github.com/bigcommerce/gruf) 0.11.3 or later.
+Adds Zipkin tracing support for [gruf](https://github.com/bigcommerce/gruf) 0.11.5 or later.
 
 ## Installation
 
@@ -10,16 +10,38 @@ Adds Zipkin tracing support for [gruf](https://github.com/bigcommerce/gruf) 0.11
 gem 'gruf-zipkin'
 ```
 
-Then in an initializer or before use:
+Then in an initializer or before use, after loading gruf:
 
 ```ruby
+require 'zipkin-tracer'
 require 'gruf/zipkin'
 
+# Set it in the Rails config, or alternatively make this just a hash if not using Rails
+Rails.application.config.zipkin_tracer = {
+  service_name: 'my-service',
+  service_port: 1234,
+  json_api_host: 'zipkin.mydomain.com',
+  sampled_as_boolean: false,
+  sample_rate: 1.0 # 0.0 to 1.0, where 1.0 => 100% of requests 
+}
+Gruf.configure do |c|
+  c.hook_options = {
+    zipkin: Rails.application.config.zipkin_tracer
+  }
+end
 Gruf::Hooks::Registry.add(:zipkin, Gruf::Zipkin::Hook)
 ```
 
 This assumes you have Zipkin already setup in your Ruby/Rails app via the installation 
 instructions in the [zipkin-tracer](https://github.com/openzipkin/zipkin-ruby) gem.
+
+### Rails/Rack Tracing
+
+Add this to config.ru, if using above configuration:
+ 
+```ruby
+use ZipkinTracer::RackHandler, Rails.application.config.zipkin_tracer
+```
 
 ## Configuration
 
@@ -30,8 +52,8 @@ Gruf.configure do |c|
   c.hook_options = {
     zipkin: {
       span_prefix: 'myapp',
-    }    
-  }  
+    }
+  }
 end
 ```
 

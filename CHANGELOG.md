@@ -1,5 +1,5 @@
-Changelog for the gruf gem. This includes internal history before the gem was made.
+Changelog for the gruf-zipkin gem.
 
-h3. 0.9.0
+h3. 0.10.0
 
 - Initial public release
