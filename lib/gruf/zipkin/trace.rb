@@ -37,6 +37,13 @@ module Gruf
       #
       def trace!(tracer, &block)
         raise ArgumentError, 'no block given' unless block_given?
+        # If for some reason we don't have a tracer, let's just proceed as normal
+        # and not cause the request to fail
+        unless tracer
+          Gruf.logger.warn "Failed to log trace for #{method.request_class}.#{method.signature.classify} because Tracer was not found!" if Gruf.logger
+          return block.call(method.request, method.active_call)
+        end
+
         result = nil
 
         tracer.with_new_span(trace_id, component) do |span|
