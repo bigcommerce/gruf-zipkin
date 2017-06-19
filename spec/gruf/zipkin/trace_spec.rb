@@ -103,7 +103,7 @@ describe Gruf::Zipkin::Trace do
       end
     end
 
-    [0, '0', false, 'false'].each do |v|
+    [0, '0', false].each do |v|
       context "when the X-B3-Sampled header is passed with value #{v}" do
         let(:metadata) { {
             'X-B3-Sampled' => v,
