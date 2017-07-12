@@ -26,6 +26,7 @@ Gem::Specification.new do |spec|
   spec.summary       = %q{Plugin for zipkin tracing for gruf}
   spec.description   = spec.summary
   spec.homepage      = 'https://github.com/bigcommerce/gruf-zipkin'
+  spec.license       = 'MIT'
 
   spec.files         = Dir['README.md', 'CHANGELOG.md', 'CODE_OF_CONDUCT.md', 'lib/**/*', 'gruf-zipkin.gemspec']
   spec.require_paths = ['lib']
