@@ -16,6 +16,12 @@
 #
 source 'https://rubygems.org'
 
-gem 'gruf', git: 'git@github.com:bigcommerce/gruf', tag: 'v0.14.1'
+gem 'gruf', '1.1.0'
+
+group :development do
+  gem 'bundler-audit'
+  gem 'rubocop', '~> 0.49.1'
+  gem 'simplecov', require: false
+end
 
 gemspec

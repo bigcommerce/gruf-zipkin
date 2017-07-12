@@ -30,7 +30,7 @@ module Gruf
           error: 'grpc.error',
           error_code: 'grpc.error_code',
           error_class: 'grpc.error_class',
-          success: 'grpc.success',
+          success: 'grpc.success'
         }
       }.freeze
 
@@ -86,11 +86,10 @@ module Gruf
         result
       end
 
-
       ##
       # Memoize build of a new trace_id based on propagation headers, or generator if
       # no headers are present
-      # 
+      #
       # @return [::Trace::TraceId]
       #
       def trace_id

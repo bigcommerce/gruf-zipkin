@@ -51,7 +51,7 @@ module Gruf
       # @return [String]
       #
       def service_key
-        service.class.name.underscore.gsub('/','.')
+        service.class.name.underscore.tr('/', '.')
       end
 
       ##
