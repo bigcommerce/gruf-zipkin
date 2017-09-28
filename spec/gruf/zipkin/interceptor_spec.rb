@@ -1,4 +1,3 @@
-# coding: utf-8
 # Copyright (c) 2017-present, BigCommerce Pty. Ltd. All rights reserved
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
@@ -16,41 +15,35 @@
 #
 require 'spec_helper'
 
-describe Gruf::Zipkin::Hook do
+describe Gruf::Zipkin::Interceptor do
   let(:service) { ThingService.new }
   let(:options) { {} }
   let(:signature) { 'get_thing' }
-  let(:request) { grpc_request }
   let(:active_call) { grpc_active_call }
-  let(:hook) { described_class.new(service, { zipkin: options.merge(sampled_as_boolean: false) }) }
+  let(:request) do
+    double(
+      :request,
+      method_key: signature,
+      service: ThingService,
+      rpc_desc: nil,
+      active_call: active_call,
+      message: grpc_request
+    )
+  end
+  let(:errors) { Gruf::Error.new }
+  let(:interceptor) { described_class.new(request, errors, options.merge(sampled_as_boolean: false)) }
 
   before do
     allow(::Trace::Endpoint).to receive(:local_endpoint).and_return(nil)
   end
 
-  describe '.service_key' do
-    subject { hook.service_key }
-    it 'should be the translated service class name' do
-      expect(subject).to eq 'thing_service'
-    end
-  end
-
-  describe '.options' do
-    let(:options) { { abc: 'def' } }
-    subject { hook.options }
-
-    it 'should return zipkin options' do
-      expect(subject).to eq options.merge(sampled_as_boolean: false)
-    end
-  end
-
-  describe '.around' do
+  describe '.call' do
     let(:trace) { grpc_trace }
     let(:sampled) { true }
-    subject { hook.around(trace.method.signature, trace.method.request, trace.method.active_call) { true } }
+    subject { interceptor.call { true } }
 
     before do
-      allow(hook).to receive(:build_trace).and_return(trace)
+      allow(interceptor).to receive(:build_trace).and_return(trace)
       allow(trace).to receive(:sampled?).and_return(sampled)
     end
 

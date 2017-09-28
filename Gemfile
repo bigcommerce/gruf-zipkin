@@ -1,4 +1,3 @@
-# coding: utf-8
 # Copyright (c) 2017-present, BigCommerce Pty. Ltd. All rights reserved
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
@@ -16,11 +15,11 @@
 #
 source 'https://rubygems.org'
 
-gem 'gruf', '1.1.0'
+gem 'gruf', '~> 2.0.0'
 
 group :development do
   gem 'bundler-audit'
-  gem 'rubocop', '~> 0.49.1'
+  gem 'rubocop'
   gem 'simplecov', require: false
 end
 

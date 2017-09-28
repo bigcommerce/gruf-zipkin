@@ -1,4 +1,3 @@
-# coding: utf-8
 # Copyright (c) 2017-present, BigCommerce Pty. Ltd. All rights reserved
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
@@ -71,7 +70,7 @@ module Gruf
           begin
             result = block.call(method.request, method.active_call)
             span.record(::Trace::Annotation::SERVER_SEND)
-          rescue => e
+          rescue StandardError => e
             if e.is_a?(::GRPC::BadStatus)
               span.record_tag(METADATA_KEYS[:error], true)
               span.record_tag(METADATA_KEYS[:grpc][:error], true)

@@ -1,4 +1,3 @@
-# coding: utf-8
 # Copyright (c) 2017-present, BigCommerce Pty. Ltd. All rights reserved
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
@@ -16,30 +15,22 @@
 #
 module Gruf
   module Zipkin
-    class Hook < Gruf::Hooks::Base
-
-      ##
-      # Sets up the tracing hook
-      #
-      def setup
-        @config = ::ZipkinTracer::Config.new(nil, options).freeze
-        @tracer = ::ZipkinTracer::TracerFactory.new.tracer(@config)
-      end
-
+    ##
+    # Intercepts calls to provide Zipkin tracing
+    #
+    class Interceptor < Gruf::Interceptors::ServerInterceptor
       ##
       # Handle the gruf around hook and trace sampled requests
       #
-      # @param [Symbol] call_signature
-      # @param [Object] request
-      # @param [GRPC::ActiveCall] active_call
-      #
-      def around(call_signature, request, active_call, &block)
-        trace = build_trace(call_signature, request, active_call)
+      def call(&block)
+        # do this here to ensure the tracer is initialized before the trace block. Zipkin's library has poor OOE support
+        tr = tracer
 
-        if trace.sampled?
+        trace = build_trace
+        if trace && trace.sampled?
           result = nil
           ::ZipkinTracer::TraceContainer.with_trace_id(trace.trace_id) do
-            result = trace.trace!(@tracer, &block)
+            result = trace.trace!(tr, &block)
           end
         else
           result = yield
@@ -47,31 +38,31 @@ module Gruf
         result
       end
 
-      ##
-      # @return [String]
-      #
-      def service_key
-        service.class.name.underscore.tr('/', '.')
-      end
-
-      ##
-      # @return [Hash]
-      #
-      def options
-        @options.fetch(:zipkin, {})
-      end
-
       private
 
       ##
-      # @param [Symbol] call_signature
-      # @param [Object] request
-      # @param [GRPC::ActiveCall] active_call
+      # @return [ZipkinTracer::Config]
+      #
+      def config
+        @config ||= ::ZipkinTracer::Config.new(nil, { sampled_as_boolean: false }.merge(options)).freeze
+      end
+
+      ##
+      # @return [Trace::ZipkinTracerBase]
+      #
+      def tracer
+        @tracer ||= ::ZipkinTracer::TracerFactory.new.tracer(config)
+      end
+
+      ##
       # @return [Gruf::Zipkin::Trace]
       #
-      def build_trace(call_signature, request, active_call)
-        method = Gruf::Zipkin::Method.new(active_call, call_signature, request)
-        Gruf::Zipkin::Trace.new(method, service_key, options)
+      def build_trace
+        method = Gruf::Zipkin::Method.new(request.active_call, request.method_key, request.message)
+        Gruf::Zipkin::Trace.new(method, request.service_key, options)
+      rescue StandardError => e # catchall for zipkin failure
+        Gruf.logger.error "Failed to build zipkin trace: #{e.message}"
+        nil
       end
     end
   end

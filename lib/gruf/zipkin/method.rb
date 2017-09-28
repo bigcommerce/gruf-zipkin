@@ -1,4 +1,3 @@
-# coding: utf-8
 # Copyright (c) 2017-present, BigCommerce Pty. Ltd. All rights reserved
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
@@ -29,7 +28,7 @@ module Gruf
       #
       def initialize(active_call, signature, request)
         @active_call = active_call
-        @signature = signature.to_s.gsub('_without_intercept', '')
+        @signature = signature.to_s
         @request = request
       end
 

@@ -1,4 +1,3 @@
-# coding: utf-8
 # Copyright (c) 2017-present, BigCommerce Pty. Ltd. All rights reserved
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
@@ -19,9 +18,14 @@ require_relative 'zipkin/version'
 require_relative 'zipkin/headers'
 require_relative 'zipkin/method'
 require_relative 'zipkin/trace'
-require_relative 'zipkin/hook'
+require_relative 'zipkin/interceptor'
 
+##
+# Gruf main base module
 module Gruf
+  ##
+  # Zipkin gruf module
+  #
   module Zipkin
   end
 end
