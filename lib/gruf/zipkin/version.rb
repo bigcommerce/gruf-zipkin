@@ -15,6 +15,6 @@
 #
 module Gruf
   module Zipkin
-    VERSION = '0.10.3'.freeze
+    VERSION = '1.0.0'.freeze
   end
 end

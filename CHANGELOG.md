@@ -1,5 +1,9 @@
 Changelog for the gruf-zipkin gem.
 
+h3. 1.0.0
+
+- Support for gruf 2.0.0
+
 h3. 0.10.3
 
 - Update to 0.10.3, add rubocop+bundler-audit
