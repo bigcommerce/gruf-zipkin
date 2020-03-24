@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Copyright (c) 2017-present, BigCommerce Pty. Ltd. All rights reserved
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
@@ -13,6 +15,8 @@
 # COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
+require 'logger'
+
 module Gruf
   module Zipkin
     ##
@@ -42,6 +46,7 @@ module Gruf
         @method = method
         @service_key = service_key.to_s
         @options = options
+        @logger = ::Gruf.logger || ::Logger.new(STDOUT)
       end
 
       ##
@@ -52,10 +57,11 @@ module Gruf
       #
       def trace!(tracer, &block)
         raise ArgumentError, 'no block given' unless block_given?
+
         # If for some reason we don't have a tracer, let's just proceed as normal
         # and not cause the request to fail
         unless tracer
-          Gruf.logger.warn "Failed to log trace for #{method.request_class}.#{method.signature.classify} because Tracer was not found!" if Gruf.logger
+          @logger.warn "Failed to log trace for #{method.request_class}.#{method.signature.classify} because Tracer was not found!"
           return block.call(method.request, method.active_call)
         end
 

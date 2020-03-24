@@ -1,7 +1,5 @@
-inherit_from:
-  - .rubocop_todo.yml
-
 AllCops:
+  TargetRubyVersion: 2.6
   Exclude:
     - spec/**/*
     - .bundle/**/*
@@ -11,3 +9,37 @@ AllCops:
     - log/**/*
     - Rakefile
     - gruf-zipkin.gemspec
+
+Lint/AmbiguousOperator:
+  Enabled: false
+
+Metrics/ParameterLists:
+  Max: 20
+
+Metrics/AbcSize:
+  Max: 100
+
+Metrics/BlockLength:
+  Exclude:
+    - lib/bigcommerce/lightstep/redis/wrapper.rb
+
+Layout/LineLength:
+  Enabled: false
+
+Metrics/MethodLength:
+  Max: 40
+
+Metrics/PerceivedComplexity:
+  Max: 10
+
+Metrics/CyclomaticComplexity:
+  Max: 10
+
+Style/HashEachMethods:
+  Enabled: false
+
+Style/HashTransformKeys:
+  Enabled: false
+
+Style/HashTransformValues:
+  Enabled: false

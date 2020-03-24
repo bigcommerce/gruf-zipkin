@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Copyright (c) 2017-present, BigCommerce Pty. Ltd. All rights reserved
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
@@ -14,13 +16,5 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 source 'https://rubygems.org'
-
-gem 'gruf', '~> 2.0.0'
-
-group :development do
-  gem 'bundler-audit'
-  gem 'rubocop'
-  gem 'simplecov', require: false
-end
 
 gemspec
