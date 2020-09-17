@@ -1,6 +1,6 @@
 # gruf-zipkin - Zipkin tracing for gruf
 
-[![Build Status](https://travis-ci.org/bigcommerce/gruf-zipkin.svg?branch=master)](https://travis-ci.org/bigcommerce/gruf-zipkin) [![Gem Version](https://badge.fury.io/rb/gruf-zipkin.svg)](https://badge.fury.io/rb/gruf-zipkin) [![Inline docs](http://inch-ci.org/github/bigcommerce/gruf-zipkin.svg?branch=master)](http://inch-ci.org/github/bigcommerce/gruf-zipkin)
+[![Build Status](https://travis-ci.org/bigcommerce/gruf-zipkin.svg?branch=main)](https://travis-ci.org/bigcommerce/gruf-zipkin) [![Gem Version](https://badge.fury.io/rb/gruf-zipkin.svg)](https://badge.fury.io/rb/gruf-zipkin) [![Inline docs](http://inch-ci.org/github/bigcommerce/gruf-zipkin.svg?branch=main)](http://inch-ci.org/github/bigcommerce/gruf-zipkin)
 
 Adds Zipkin tracing support for [gruf](https://github.com/bigcommerce/gruf) 2.0.0+.
 
